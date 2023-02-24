@@ -23,14 +23,24 @@ export function DonationCard() {
   const [sumUpClient, setSumUpClient] = useState(null);
   const [issuePaymentRequest, setIssuePaymentRequest] = useState('');
 
+  const [paymentWidget, setPaymentWidget] = useState(null);
+
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState<{ message: string }>(null);
   useEffect(() => {
     injectScript({
       scriptSrc: configs.swift_checkout_sdk,
-    }).then(({ SumUp }) => {
-      setSumUpClient(new SumUp.SwiftCheckout(configs.merchant_public_key));
-    });
+    })
+      .then(({ SumUp }) => {
+        setSumUpClient(new SumUp.SwiftCheckout(configs.merchant_public_key));
+
+        return injectScript({
+          scriptSrc: configs.payment_widget_sdK,
+        });
+      })
+      .then(({ SumUpCard }) => {
+        setPaymentWidget(SumUpCard);
+      });
   }, []);
 
   useEffect(() => {
@@ -83,6 +93,34 @@ export function DonationCard() {
     });
   }, [sumUpClient, paymentContainerRef.current]);
 
+  useEffect(() => {
+    if (!paymentWidget) {
+      return;
+    }
+    apiClient
+      .createCheckout({
+        paymentType: '',
+      })
+      .then((checkout) => {
+        paymentWidget.mount({
+          checkoutId: checkout.id,
+          onResponse: function (type: string, body: any) {
+            if (type === 'success' && body.status === 'PAID') {
+              setSuccess({ message: 'Thanks! 🎉' });
+            }
+            console.log('Type', type);
+            console.log('Body', body);
+          },
+
+          onPaymentMethodsLoad: (payments: any) => {
+            return payments.eligible
+              .map((p) => p.id)
+              .filter((pId) => pId !== 'apple_pay');
+          },
+        });
+      });
+  }, [paymentWidget]);
+
   return (
     <Card>
       <Headline as="h2" css={cx(center, spacing({ bottom: 'mega' }))}>
@@ -107,6 +145,9 @@ export function DonationCard() {
         />
       )}
       <div ref={paymentContainerRef} />
+
+      <Body css={cx(center, spacing({ bottom: 'giga' }))}>-- OR --</Body>
+      <div id="sumup-card"></div>
 
       {success && (
         <NotificationInline body={success.message} isVisible variant="info" />

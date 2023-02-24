@@ -1,5 +1,5 @@
 export default {
-  createCheckout: ({ paymentType: payment_type }) =>
+  createCheckout: ({ paymentType: payment_type }: { paymentType?: any }) =>
     fetch('/api/create-checkout', {
       method: 'POST',
       headers: {
