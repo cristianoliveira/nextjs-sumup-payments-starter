@@ -21,7 +21,7 @@ import apiClient from '../modules/app-api-client';
 export function DonationCard() {
   const paymentContainerRef = useRef(null);
   const [sumUpClient, setSumUpClient] = useState(null);
-  const [issuePaymentRequest, setIssuePaymentRequest] = useState();
+  const [issuePaymentRequest, setIssuePaymentRequest] = useState('');
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState<{ message: string }>(null);
@@ -47,11 +47,10 @@ export function DonationCard() {
 
     const paymentElement = sumUpClient
       .elements()
-      .onSubmit(async (paymentEvent) => {
+      .onSubmit(async (paymentEvent: any) => {
         try {
           const paymentResponse = await paymentRequest.show(paymentEvent);
           const checkout = await apiClient.createCheckout({
-            amount: 1,
             paymentType: paymentResponse.details.paymentMethod,
           });
 
@@ -70,7 +69,7 @@ export function DonationCard() {
         }
       });
 
-    paymentRequest.canMakePayment().then((isAvailable) => {
+    paymentRequest.canMakePayment().then((isAvailable: any) => {
       if (isAvailable) {
         paymentElement.mount({
           paymentMethods: ['apple_pay'],
