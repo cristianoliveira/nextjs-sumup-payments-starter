@@ -1,4 +1,3 @@
-/* eslint-disable testing-library/no-container */
 import { render } from '../../test-utils';
 
 import { Meta, MetaProps } from './Meta';
