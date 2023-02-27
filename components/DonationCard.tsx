@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { css } from '@emotion/react';
+import { useRouter } from 'next/router';
 
 import { SumUpLogo } from '@sumup/icons';
 // import styled from '@emotion/styled';
@@ -19,13 +20,14 @@ import useSwiftCheckout from '../hooks/use-swift-checkout';
 import PaymentWidget from '../components/PaymentWidget';
 
 export function DonationCard({ merchantPubId }) {
+  const router = useRouter();
+  const onSuccess = () => router.push('/thanks');
   const paymentContainerRef = useRef(null);
   const [issuePaymentRequest, setIssuePaymentRequest] = useState('');
 
   const [sumUpClient] = useSwiftCheckout(merchantPubId.public_api_key);
 
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState<{ message: string }>(null);
 
   useEffect(() => {
     if (!sumUpClient || !paymentContainerRef.current) {
@@ -55,7 +57,7 @@ export function DonationCard({ merchantPubId }) {
           );
 
           if (result.status === 'PAID') {
-            setSuccess({ message: 'Thanks! 🎉' });
+            onSuccess();
           } else {
             setError(new Error('Issue with the payment.'));
           }
@@ -94,30 +96,23 @@ export function DonationCard({ merchantPubId }) {
         SumUp Swift Checkout ®
       </Body>
 
-      {!success && (
-        <div>
-          {issuePaymentRequest && (
-            <NotificationInline
-              headline="Swift Checkout"
-              body={issuePaymentRequest}
-              isVisible
-              variant="info"
-            />
-          )}
-          <Body
-            ref={paymentContainerRef}
-            css={cx(center, spacing({ bottom: 'giga' }))}
+      <div>
+        {issuePaymentRequest && (
+          <NotificationInline
+            headline="Swift Checkout"
+            body={issuePaymentRequest}
+            isVisible
+            variant="info"
           />
+        )}
+        <Body
+          ref={paymentContainerRef}
+          css={cx(center, spacing({ bottom: 'giga' }))}
+        />
 
-          <Body css={cx(center)}>-- OR --</Body>
-          <PaymentWidget onSuccess={setSuccess} onError={setError} />
-        </div>
-      )}
-
-      {success && (
-        <NotificationInline body={success.message} isVisible variant="info" />
-      )}
-
+        <Body css={cx(center)}>-- OR --</Body>
+        <PaymentWidget onSuccess={onSuccess} onError={setError} />
+      </div>
       {error && (
         <NotificationInline
           body={`Error: ${error.message}`}
