@@ -16,14 +16,13 @@ import {
 import apiClient from '../modules/app-api-client';
 
 import useSwiftCheckout from '../hooks/use-swift-checkout';
-import usePaymentWidget from '../hooks/use-payment-widget';
+import PaymentWidget from '../components/PaymentWidget';
 
 export function DonationCard({ merchantPubId }) {
   const paymentContainerRef = useRef(null);
   const [issuePaymentRequest, setIssuePaymentRequest] = useState('');
 
   const [sumUpClient] = useSwiftCheckout(merchantPubId.public_api_key);
-  const [paymentWidget] = usePaymentWidget();
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState<{ message: string }>(null);
@@ -65,7 +64,7 @@ export function DonationCard({ merchantPubId }) {
         }
       });
 
-    paymentRequest.canMakePayment().then((isAvailable: any) => {
+    paymentRequest.canMakePayment().then((isAvailable: boolean) => {
       if (isAvailable) {
         paymentElement.mount({
           paymentMethods: ['apple_pay'],
@@ -78,54 +77,6 @@ export function DonationCard({ merchantPubId }) {
       }
     });
   }, [sumUpClient, paymentContainerRef.current]);
-
-  useEffect(() => {
-    if (!paymentWidget) {
-      return;
-    }
-
-    apiClient
-      .createCheckout({
-        paymentType: '',
-      })
-      .then((checkout) => {
-        paymentWidget.mount({
-          checkoutId: checkout.id,
-          onResponse: function (type: string, body: any) {
-            if (type === 'success' && body.status === 'PAID') {
-              setSuccess({ message: 'Thanks! 🎉' });
-            }
-
-            if (type === 'success' && body.status === 'FAILED') {
-              setError(
-                new Error(
-                  'Something went wrong with the payment. Check your info and try again.',
-                ),
-              );
-            }
-
-            if (type === 'fail') {
-              setError(
-                new Error(
-                  'Something went wrong our system. See logs for details.',
-                ),
-              );
-            }
-
-            console.log('Type', type);
-            console.log('Body', body);
-          },
-
-          onPaymentMethodsLoad: (payments: any) => {
-            return payments.eligible
-              .map((p) => p.id)
-              .filter((pId) => pId !== 'apple_pay');
-          },
-
-          showFooter: false,
-        });
-      });
-  }, [paymentWidget]);
 
   return (
     <Card>
@@ -159,7 +110,7 @@ export function DonationCard({ merchantPubId }) {
           />
 
           <Body css={cx(center)}>-- OR --</Body>
-          <div id="sumup-card"></div>
+          <PaymentWidget onSuccess={setSuccess} onError={setError} />
         </div>
       )}
 
