@@ -2,10 +2,10 @@
 
 # Welcome to Buy me a coffee by SumUp
 
+</div>
+
 This project is mostly a proof of concept on how to use the SumUp online payment
 ecosystem to start receiving payments online.
-
-</div>
 
 ## Getting started
 
@@ -24,6 +24,10 @@ yarn && yarn dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+
+## Implemetation details
+
+You can check the implementations in `components/PaymentWidget.tsx` and `components/SwiftCheckout.tsx`
 
 ## Deploy your own using Vercel
 
