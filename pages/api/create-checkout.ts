@@ -20,8 +20,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     payload: {
       checkout_reference: `checkout-ref-${Math.random()}`,
       merchant_code: configs.merchant_code,
-      return_url: `${process.env.VERCEL_URL}/thanks`,
-      redirect_url: `${process.env.VERCEL_URL}/thanks`,
+      return_url: `https://${process.env.VERCEL_URL}/thanks`,
+      redirect_url: `https://${process.env.VERCEL_URL}/thanks`,
       amount: configs.donation_amount,
       payment_type,
       currency: configs.currency,
