@@ -96,6 +96,22 @@ export function DonationCard({ merchantPubId }) {
               setSuccess({ message: 'Thanks! 🎉' });
             }
 
+            if (type === 'success' && body.status === 'FAILED') {
+              setError(
+                new Error(
+                  'Something went wrong with the payment. Check your info and try again.',
+                ),
+              );
+            }
+
+            if (type === 'fail') {
+              setError(
+                new Error(
+                  'Something went wrong our system. See logs for details.',
+                ),
+              );
+            }
+
             console.log('Type', type);
             console.log('Body', body);
           },
