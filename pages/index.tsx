@@ -7,7 +7,7 @@ import { Meta } from '../components/Meta';
 import { Logo } from '../components/Logo';
 import { DonationCard } from '../components/DonationCard';
 
-import fetchSumupMerchaPublicId, {
+import fetchMerchantPublicId, {
   MerchantPublicId,
 } from '../modules/sumup-merchant-public-id';
 
@@ -42,7 +42,7 @@ const Page: NextPage = ({
 );
 
 export async function getStaticProps() {
-  const merchantPubId = await fetchSumupMerchaPublicId();
+  const merchantPubId = await fetchMerchantPublicId();
 
   return {
     props: {
