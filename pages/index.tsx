@@ -1,4 +1,5 @@
 import { NextPage } from 'next';
+import Link from 'next/link';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -33,6 +34,9 @@ const Page: NextPage = ({
     <Main>
       <Logo />
       <DonationCard merchantPubId={merchantPubId} />
+      <Link href="https://github.com/cristianoliveira/nextjs-sumup-payments-starter">
+        See how it works
+      </Link>
     </Main>
   </>
 );
