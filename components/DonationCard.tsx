@@ -13,40 +13,26 @@ import {
   center,
 } from '@sumup/circuit-ui';
 
-import configs from '../modules/sumup-configs-public';
-
-import injectScript from '../modules/sumup-sdk-injector';
 import apiClient from '../modules/app-api-client';
+
+import useSwiftCheckout from '../hooks/use-swift-checkout';
+import usePaymentWidget from '../hooks/use-payment-widget';
 
 export function DonationCard({ merchantPubId }) {
   const paymentContainerRef = useRef(null);
-  const [sumUpClient, setSumUpClient] = useState(null);
   const [issuePaymentRequest, setIssuePaymentRequest] = useState('');
 
-  const [paymentWidget, setPaymentWidget] = useState(null);
+  const [sumUpClient] = useSwiftCheckout(merchantPubId.public_api_key);
+  const [paymentWidget] = usePaymentWidget();
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState<{ message: string }>(null);
-  useEffect(() => {
-    injectScript({
-      scriptSrc: configs.swift_checkout_sdk,
-    })
-      .then(({ SumUp }) => {
-        setSumUpClient(new SumUp.SwiftCheckout(merchantPubId.public_api_key));
-
-        return injectScript({
-          scriptSrc: configs.payment_widget_sdK,
-        });
-      })
-      .then(({ SumUpCard }) => {
-        setPaymentWidget(SumUpCard);
-      });
-  }, []);
 
   useEffect(() => {
     if (!sumUpClient || !paymentContainerRef.current) {
       return;
     }
+
     const paymentRequest = sumUpClient.paymentRequest({
       countryCode: 'DE',
       total: {
@@ -97,6 +83,7 @@ export function DonationCard({ merchantPubId }) {
     if (!paymentWidget) {
       return;
     }
+
     apiClient
       .createCheckout({
         paymentType: '',
@@ -118,6 +105,7 @@ export function DonationCard({ merchantPubId }) {
               .map((p) => p.id)
               .filter((pId) => pId !== 'apple_pay');
           },
+
           showFooter: false,
         });
       });
@@ -139,22 +127,25 @@ export function DonationCard({ merchantPubId }) {
         SumUp Swift Checkout ®
       </Body>
 
-      {issuePaymentRequest && (
-        <NotificationInline
-          headline="Swift Checkout"
-          body={issuePaymentRequest}
-          isVisible
-          variant="info"
-        />
+      {!success && (
+        <div>
+          {issuePaymentRequest && (
+            <NotificationInline
+              headline="Swift Checkout"
+              body={issuePaymentRequest}
+              isVisible
+              variant="info"
+            />
+          )}
+          <Body
+            ref={paymentContainerRef}
+            css={cx(center, spacing({ bottom: 'giga' }))}
+          />
+
+          <Body css={cx(center)}>-- OR --</Body>
+          <div id="sumup-card"></div>
+        </div>
       )}
-
-      <Body
-        ref={paymentContainerRef}
-        css={cx(center, spacing({ bottom: 'giga' }))}
-      />
-
-      <Body css={cx(center)}>-- OR --</Body>
-      <div id="sumup-card"></div>
 
       {success && (
         <NotificationInline body={success.message} isVisible variant="info" />
