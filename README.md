@@ -1,11 +1,11 @@
 <div align="center">
 
-# Welcome to Buy me a coffee by SumUp
+# Buy me a coffee by SumUp
 
 </div>
 
-This project is mostly a proof of concept on how to use the SumUp online payment
-ecosystem to start receiving payments online.
+This project is mostly a proof of concept to demonstrate how to use the SumUp online payment
+ecosystem to start receiving payments online with easy.
 
 ## Getting started
 
