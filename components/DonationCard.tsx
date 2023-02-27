@@ -108,6 +108,7 @@ export function DonationCard({ merchantPubId }) {
             if (type === 'success' && body.status === 'PAID') {
               setSuccess({ message: 'Thanks! 🎉' });
             }
+
             console.log('Type', type);
             console.log('Body', body);
           },
@@ -117,6 +118,7 @@ export function DonationCard({ merchantPubId }) {
               .map((p) => p.id)
               .filter((pId) => pId !== 'apple_pay');
           },
+          showFooter: false,
         });
       });
   }, [paymentWidget]);
@@ -136,6 +138,7 @@ export function DonationCard({ merchantPubId }) {
       <Body css={cx(center, spacing({ bottom: 'giga' }))}>
         SumUp Swift Checkout ®
       </Body>
+
       {issuePaymentRequest && (
         <NotificationInline
           headline="Swift Checkout"
@@ -144,9 +147,13 @@ export function DonationCard({ merchantPubId }) {
           variant="info"
         />
       )}
-      <div ref={paymentContainerRef} />
 
-      <Body css={cx(center, spacing({ bottom: 'giga' }))}>-- OR --</Body>
+      <Body
+        ref={paymentContainerRef}
+        css={cx(center, spacing({ bottom: 'giga' }))}
+      />
+
+      <Body css={cx(center)}>-- OR --</Body>
       <div id="sumup-card"></div>
 
       {success && (
