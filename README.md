@@ -25,6 +25,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
+## Deploy your own using Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcristianoliveira%2Fnextjs-sumup-payments-starter&env=FIXED_AMOUNT_DONATION,NEXT_PUBLIC_SUMUP_PUBLIC_MERCHANT_KEY,SUMUP_API_URL,SUMUP_API_CLIENT_ID,SUMUP_API_CLIENT_SECRET,SUMUP_MERCHANT_CODE,SUMUP_MERCHANT_CODE&project-name=buymeacoffee-sumup)
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
 ## More
 
 For more examples and also an extensive documentation go to
