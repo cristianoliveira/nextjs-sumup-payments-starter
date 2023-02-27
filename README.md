@@ -9,7 +9,13 @@ ecosystem to start receiving payments online.
 
 ## Getting started
 
-First, run the development server:
+First, configure the app by creating a `.env` based on the `.env.example` [file](https://github.com/cristianoliveira/nextjs-sumup-payments-starter/blob/main/.env.example) with your configurations:
+
+```
+cp .env.example .env
+```
+
+Once edited the configuration, run the development server:
 
 ```bash
 yarn && yarn dev
