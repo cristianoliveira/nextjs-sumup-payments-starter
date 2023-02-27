@@ -18,7 +18,7 @@ import configs from '../modules/sumup-configs-public';
 import injectScript from '../modules/sumup-sdk-injector';
 import apiClient from '../modules/app-api-client';
 
-export function DonationCard() {
+export function DonationCard({ merchantPubId }) {
   const paymentContainerRef = useRef(null);
   const [sumUpClient, setSumUpClient] = useState(null);
   const [issuePaymentRequest, setIssuePaymentRequest] = useState('');
@@ -32,7 +32,7 @@ export function DonationCard() {
       scriptSrc: configs.swift_checkout_sdk,
     })
       .then(({ SumUp }) => {
-        setSumUpClient(new SumUp.SwiftCheckout(configs.merchant_public_key));
+        setSumUpClient(new SumUp.SwiftCheckout(merchantPubId.public_api_key));
 
         return injectScript({
           scriptSrc: configs.payment_widget_sdK,

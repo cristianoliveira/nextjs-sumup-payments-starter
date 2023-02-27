@@ -6,6 +6,10 @@ import { Meta } from '../components/Meta';
 import { Logo } from '../components/Logo';
 import { DonationCard } from '../components/DonationCard';
 
+import fetchSumupMerchaPublicId, {
+  MerchantPublicId,
+} from '../modules/sumup-merchant-public-id';
+
 const Main = styled('main')(
   ({ theme }) => css`
     display: flex;
@@ -19,14 +23,28 @@ const Main = styled('main')(
 
 const title = 'Welcome to SumUp Next.js';
 
-const Page: NextPage = () => (
+const Page: NextPage = ({
+  merchantPubId,
+}: {
+  merchantPubId: MerchantPublicId;
+}) => (
   <>
     <Meta title={title} path="/" />
     <Main>
       <Logo />
-      <DonationCard />
+      <DonationCard merchantPubId={merchantPubId} />
     </Main>
   </>
 );
+
+export async function getStaticProps() {
+  const merchantPubId = await fetchSumupMerchaPublicId();
+
+  return {
+    props: {
+      merchantPubId,
+    },
+  };
+}
 
 export default Page;

@@ -35,6 +35,18 @@ const apiInit = function ({ apiUrl }) {
         }).then((res) => res.json());
       },
     },
+
+    merchants: {
+      fetchPublicId: async ({ access_token, merchant_code }) => {
+        return fetch(`${apiUrl}/v0.1/merchants/${merchant_code}/public-id`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${access_token}`,
+          },
+        }).then((res) => res.json());
+      },
+    },
   };
 };
 
