@@ -27,9 +27,16 @@ function PaymentWidget({
         paymentType: '',
       })
       .then((checkout: { id: string }) => {
-        setIsReady(true);
         paymentWidget.mount({
+          onLoad: () => setIsReady(true),
           checkoutId: checkout.id,
+
+          onPaymentMethodsLoad: (payments: { eligible: { id: string }[] }) => {
+            return payments.eligible
+              .map((p) => p.id)
+              .filter((pId) => pId !== 'apple_pay');
+          },
+
           onResponse: function (type: string, body: { status: string }) {
             if (type === 'success' && body.status === 'PAID') {
               onSuccess({ message: 'Thanks! 🎉' });
@@ -51,12 +58,6 @@ function PaymentWidget({
 
             console.log('Type', type);
             console.log('Body', body);
-          },
-
-          onPaymentMethodsLoad: (payments: { eligible: { id: string }[] }) => {
-            return payments.eligible
-              .map((p) => p.id)
-              .filter((pId) => pId !== 'apple_pay');
           },
 
           showFooter: false,
