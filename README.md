@@ -9,7 +9,12 @@ ecosystem to start receiving payments online with easy.
 
 ## Getting started
 
-First, configure the app by creating a `.env` based on the `.env.example` [file](https://github.com/cristianoliveira/nextjs-sumup-payments-starter/blob/main/.env.example) with your configurations:
+First, check our documentation to obtain your credentials.
+
+[developers.sumup.com](https://developer.sumup.com/)
+[Swift Checkout Guide](https://js.sumup.com/swift-checkout)
+
+Then, configure the app by creating a `.env` based on the `.env.example` [file](https://github.com/cristianoliveira/nextjs-sumup-payments-starter/blob/main/.env.example) with your configurations:
 
 ```
 cp .env.example .env
@@ -35,7 +40,6 @@ You can check the implementations in `components/PaymentWidget.tsx` and `compone
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-## More
+## More examples
 
-For more examples and also an extensive documentation go to
-https://developer.sumup.com/
+For more examples and also an extensive documentation go to [developers.sumup.com](https://developer.sumup.com/)
