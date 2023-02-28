@@ -11,8 +11,9 @@ ecosystem to start receiving payments online with easy.
 
 First, check our documentation to obtain your credentials.
 
-[developers.sumup.com](https://developer.sumup.com/)
-[Swift Checkout Guide](https://js.sumup.com/swift-checkout)
+[SumUp online payments getting started](https://developer.sumup.com/docs/online-payments/introduction/getting-started/)
+
+[Swift Checkout getting started](https://js.sumup.com/showroom)
 
 Then, configure the app by creating a `.env` based on the `.env.example` [file](https://github.com/cristianoliveira/nextjs-sumup-payments-starter/blob/main/.env.example) with your configurations:
 
