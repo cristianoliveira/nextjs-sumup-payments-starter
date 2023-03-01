@@ -1,5 +1,10 @@
+const defaultConfigs = {
+  api_url: 'https://api.sumup.com',
+  currency: 'EUR',
+};
+
 export default {
-  api_url: process.env.SUMUP_API_URL,
+  api_url: process.env.SUMUP_API_URL || defaultConfigs.api_url,
 
   // Merchant Information
   // Check: https://me.sumup.com
@@ -11,7 +16,7 @@ export default {
   client_id: process.env.SUMUP_API_CLIENT_ID,
   client_secret: process.env.SUMUP_API_CLIENT_SECRET,
 
+  // Checkout creation details
   donation_amount: process.env.FIXED_AMOUNT_DONATION,
-
-  currency: 'EUR',
+  currency: process.env.FIXED_AMOUNT_CURRENCY || defaultConfigs.currency,
 };

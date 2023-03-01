@@ -7,7 +7,7 @@ export default () => {
 
   useEffect(() => {
     injectScript({
-      scriptSrc: configs.payment_widget_sdK,
+      scriptSrc: configs.payment_widget_sdk,
     }).then(({ SumUpCard }) => {
       setPaymentWidget(SumUpCard);
     });

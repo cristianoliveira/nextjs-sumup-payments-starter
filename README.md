@@ -37,7 +37,7 @@ You can check the implementations in `components/PaymentWidget.tsx` and `compone
 
 ## Deploy your own using Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcristianoliveira%2Fnextjs-sumup-payments-starter&env=FIXED_AMOUNT_DONATION,SUMUP_API_URL,SUMUP_API_CLIENT_ID,SUMUP_API_CLIENT_SECRET,SUMUP_MERCHANT_CODE,SUMUP_MERCHANT_CODE&project-name=buymeacoffee-sumup)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcristianoliveira%2Fnextjs-sumup-payments-starter&env=FIXED_AMOUNT_DONATION,FIXED_AMOUNT_CURRENCY,SUMUP_API_CLIENT_ID,SUMUP_API_CLIENT_SECRET,SUMUP_MERCHANT_CODE,SUMUP_MERCHANT_EMAIL&project-name=buymeacoffee-sumup)
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
