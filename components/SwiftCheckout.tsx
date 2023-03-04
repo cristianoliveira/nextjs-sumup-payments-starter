@@ -7,18 +7,18 @@ import useSwiftCheckout from '../hooks/use-swift-checkout';
 type OnEventHandler = (event: { message: string }) => void;
 
 function SwiftCheckout({
-  merchantPubId,
+  merchantPublicKey,
+  donationAmount,
   onSuccess,
   onError,
 }: {
-  merchantPubId: string;
   onSuccess: OnEventHandler;
   onError: OnEventHandler;
-}) {
+} & DonationDetails) {
   const paymentContainerRef = useRef(null);
   const [issuePaymentRequest, setIssuePaymentRequest] = useState('');
 
-  const [sumUpClient] = useSwiftCheckout(merchantPubId);
+  const [sumUpClient] = useSwiftCheckout(merchantPublicKey);
 
   useEffect(() => {
     if (!sumUpClient || !paymentContainerRef.current) {
@@ -29,7 +29,7 @@ function SwiftCheckout({
       countryCode: 'DE',
       total: {
         label: 'A small contribution',
-        amount: { currency: 'EUR', value: '1.00' },
+        amount: { currency: 'EUR', value: donationAmount },
       },
     });
 

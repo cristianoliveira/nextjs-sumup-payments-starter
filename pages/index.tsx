@@ -7,33 +7,33 @@ import { Meta } from '../components/Meta';
 import { Logo } from '../components/Logo';
 import { DonationCard } from '../components/DonationCard';
 
-import fetchMerchantPublicId, {
-  MerchantPublicId,
-} from '../modules/sumup-merchant-public-id';
+import fetchSettings from '../modules/app-fetch-settings';
 
 const Main = styled('main')(
-  ({ theme }) => css`
+  ({ theme }: { theme?: { spacings: { mega: string } } }) => css`
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     max-width: 450px;
-    margin: 0 auto ${theme.spacings.mega};
+    margin: 0 auto ${theme?.spacings?.mega};
   `,
 );
 
 const title = 'Welcome to SumUp Next.js';
 
-const Page: NextPage = ({
-  merchantPubId,
-}: {
-  merchantPubId: MerchantPublicId;
+const Page: NextPage<DonationDetails> = ({
+  merchantPublicKey,
+  donationAmount,
 }) => (
   <>
     <Meta title={title} path="/" />
     <Main>
       <Logo />
-      <DonationCard merchantPubId={merchantPubId} />
+      <DonationCard
+        merchantPublicKey={merchantPublicKey}
+        donationAmount={donationAmount}
+      />
       <Link href="https://github.com/cristianoliveira/nextjs-sumup-payments-starter">
         See how it works
       </Link>
@@ -41,13 +41,11 @@ const Page: NextPage = ({
   </>
 );
 
-export async function getStaticProps() {
-  const merchantPubId = await fetchMerchantPublicId();
+export async function getStaticProps(): Promise<{ props: DonationDetails }> {
+  const donationDetails = await fetchSettings();
 
   return {
-    props: {
-      merchantPubId,
-    },
+    props: donationDetails,
   };
 }
 

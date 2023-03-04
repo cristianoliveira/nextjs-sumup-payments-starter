@@ -4,16 +4,13 @@ import publicConfigs from './sumup-configs-public';
 
 const sumupApi = apiInit({ apiUrl: configs.api_url });
 
-export type MerchantPublicId = {
-  public_api_key: string;
-};
-
-export default async (): Promise<MerchantPublicId> => {
+export default async (): Promise<DonationDetails> => {
   // We recommend caching this information on your own backend since once generated
   // it will not change anymore. But it's possible to fetch it on demand.
   if (publicConfigs.merchant_public_key) {
     return {
-      public_api_key: publicConfigs.merchant_public_key,
+      merchantPublicKey: publicConfigs.merchant_public_key,
+      donationAmount: configs.donation_amount,
     };
   }
 
@@ -25,8 +22,13 @@ export default async (): Promise<MerchantPublicId> => {
     scope: 'payments',
   });
 
-  return sumupApi.merchants.fetchPublicId({
+  const publicId = await sumupApi.merchants.fetchPublicId({
     access_token,
     merchant_code,
   });
+
+  return {
+    merchantPublicKey: publicId.merchant_public_key,
+    donationAmount: configs.donation_amount,
+  };
 };
