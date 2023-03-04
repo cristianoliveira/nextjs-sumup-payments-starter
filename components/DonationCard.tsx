@@ -17,7 +17,10 @@ import {
 import SwiftCheckout from '../components/SwiftCheckout';
 import PaymentWidget from '../components/PaymentWidget';
 
-export function DonationCard({ merchantPubId }) {
+export const DonationCard: React.FC<DonationDetails> = ({
+  merchantPublicKey,
+  donationAmount,
+}) => {
   const router = useRouter();
   const onSuccess = () => router.push('/thanks');
 
@@ -29,7 +32,7 @@ export function DonationCard({ merchantPubId }) {
         {'SumUp online payments'}
       </Headline>
       <Body css={cx(center, spacing({ bottom: 'giga' }))}>
-        Buy me a 1 EUR ☕️ 😁
+        Buy me a {donationAmount} EUR ☕️ 😁
       </Body>
       <Body aria-hidden css={cx(center, spacing({ bottom: 'giga' }))}>
         🔨👩🏽‍💻👨🏼‍💻🚀
@@ -41,7 +44,8 @@ export function DonationCard({ merchantPubId }) {
         </Body>
 
         <SwiftCheckout
-          merchantPubId={merchantPubId.public_api_key}
+          merchantPublicKey={merchantPublicKey}
+          donationAmount={donationAmount}
           onSuccess={onSuccess}
           onError={setError}
         />
@@ -71,4 +75,4 @@ export function DonationCard({ merchantPubId }) {
       </Body>
     </Card>
   );
-}
+};
