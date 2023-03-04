@@ -10,13 +10,13 @@ import { DonationCard } from '../components/DonationCard';
 import fetchSettings from '../modules/app-fetch-settings';
 
 const Main = styled('main')(
-  ({ theme }: { theme?: { spacings: { mega: string } } }) => css`
+  ({ theme }) => css`
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     max-width: 450px;
-    margin: 0 auto ${theme?.spacings?.mega};
+    margin: 0 auto ${theme.spacings.mega};
   `,
 );
 
