@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "serve": "yarn dev",
     "build": "next build",
     "build:analyze": "ANALYZE=true yarn build",
     "start": "next start",
