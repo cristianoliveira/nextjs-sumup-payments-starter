@@ -1,3 +1,18 @@
+import axios from 'axios';
+
+type AccessToken = {
+  access_token: string;
+};
+
+type CheckoutCreated = {
+  id: string;
+  amount: string;
+};
+
+type MerchantPublicId = {
+  merchant_public_key: string;
+};
+
 const apiInit = function ({ apiUrl }) {
   return {
     auth: {
@@ -7,44 +22,51 @@ const apiInit = function ({ apiUrl }) {
         grant_type,
         scope,
       }) => {
-        return fetch(`${apiUrl}/token`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            client_id,
-            grant_type,
-            client_secret,
-            scope,
-          }),
-        }).then((res) => res.json());
+        return axios
+          .post<AccessToken>(
+            `${apiUrl}/token`,
+            {
+              client_id,
+              grant_type,
+              client_secret,
+              scope,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            },
+          )
+          .then(({ data }) => data);
       },
     },
 
     checkouts: {
       createCheckout: async ({ access_token, payload }) => {
-        return fetch(`${apiUrl}/v0.1/checkouts`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${access_token}`,
-          },
-
-          body: JSON.stringify(payload),
-        }).then((res) => res.json());
+        return axios
+          .post<CheckoutCreated>(`${apiUrl}/v0.1/checkouts`, payload, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${access_token}`,
+            },
+          })
+          .then(({ data }) => data);
       },
     },
 
     merchants: {
       fetchPublicId: async ({ access_token, merchant_code }) => {
-        return fetch(`${apiUrl}/v0.1/merchants/${merchant_code}/public-id`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${access_token}`,
-          },
-        }).then((res) => res.json());
+        return axios
+          .get<MerchantPublicId>(
+            `${apiUrl}/v0.1/merchants/${merchant_code}/public-id`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`,
+              },
+            },
+          )
+          .then(({ data }) => data);
       },
     },
   };

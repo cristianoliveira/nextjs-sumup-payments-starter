@@ -1,12 +1,16 @@
+import axios from 'axios';
+
 export default {
-  createCheckout: ({ paymentType: payment_type }: { paymentType?: any }) =>
-    fetch('/api/create-checkout', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        payment_type,
-      }),
-    }).then((r) => r.json()),
+  createCheckout: ({ paymentType: payment_type }: { paymentType?: string }) =>
+    axios
+      .post<CheckoutCreated>(
+        '/api/create-checkout',
+        { payment_type },
+        {
+          headers: {
+            'content-type': 'application/json',
+          },
+        },
+      )
+      .then(({ data }) => data),
 };
