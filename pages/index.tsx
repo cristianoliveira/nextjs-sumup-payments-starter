@@ -20,7 +20,7 @@ const Main = styled('main')(
   `,
 );
 
-const title = 'Welcome to SumUp Next.js';
+const title = 'Buy me a coffee by SumUp OP';
 
 const Page: NextPage<DonationDetails> = ({
   merchantPublicKey,
