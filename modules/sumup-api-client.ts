@@ -10,7 +10,7 @@ type CheckoutCreated = {
 };
 
 type MerchantPublicId = {
-  merchant_public_key: string;
+  public_api_key: string;
 };
 
 const apiInit = function ({ apiUrl }) {

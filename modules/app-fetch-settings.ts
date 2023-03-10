@@ -28,7 +28,7 @@ export default async (): Promise<DonationDetails> => {
   });
 
   return {
-    merchantPublicKey: publicId.merchant_public_key,
+    merchantPublicKey: publicId.public_api_key,
     donationAmount: configs.donation_amount,
   };
 };
