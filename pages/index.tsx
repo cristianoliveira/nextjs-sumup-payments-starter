@@ -1,24 +1,12 @@
 import { NextPage } from 'next';
 import Link from 'next/link';
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
 
 import { Meta } from '../components/Meta';
 import { Logo } from '../components/Logo';
+import { Main } from '../components/Main';
 import { DonationCard } from '../components/DonationCard';
 
 import fetchSettings from '../modules/app-fetch-settings';
-
-const Main = styled('main')(
-  ({ theme }: { theme?: { spacings: { mega: string } } }) => css`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 450px;
-    margin: 0 auto ${theme?.spacings?.mega};
-  `,
-);
 
 const title = 'Buy me a coffee by SumUp OP';
 

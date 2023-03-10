@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
 import {
   Card,
   Headline,
@@ -16,17 +14,7 @@ import {
 
 import { Meta } from '../components/Meta';
 import { Logo } from '../components/Logo';
-
-const Main = styled('main')(
-  ({ theme }) => css`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 450px;
-    margin: 0 auto ${theme.spacings.mega};
-  `,
-);
+import { Main } from '../components/Main';
 
 const title = 'Thanks!';
 
