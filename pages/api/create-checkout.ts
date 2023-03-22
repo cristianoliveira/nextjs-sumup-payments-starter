@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import apiInit from '../../modules/sumup-api-client';
-import configs from '../../modules/sumup-configs';
+import apiInit from '../../modules/sumup/api-client';
+import configs from '../../modules/sumup/configs';
 
 const api = apiInit({ apiUrl: configs.api_url });
 

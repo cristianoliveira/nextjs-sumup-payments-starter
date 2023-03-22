@@ -1,6 +1,6 @@
-import apiInit from './sumup-api-client';
-import configs from './sumup-configs';
-import publicConfigs from './sumup-configs-public';
+import apiInit from './sumup/api-client';
+import configs from './sumup/configs';
+import publicConfigs from './sumup/configs-public';
 
 const sumupApi = apiInit({ apiUrl: configs.api_url });
 

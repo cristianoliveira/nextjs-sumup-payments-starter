@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import configs from '../modules/sumup-configs-public';
-import injectScript from '../modules/sumup-sdk-injector';
+import configs from '../modules/sumup/configs-public';
+import injectScript from '../modules/sdk-script-injector';
 
 export default () => {
   const [paymentWidget, setPaymentWidget] = useState(null);
