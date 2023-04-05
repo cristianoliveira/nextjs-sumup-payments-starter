@@ -1,5 +1,5 @@
 const defaultConfigs = {
-  swift_checkout_sdk: 'https://js.sumup.com/swift-checkout.js',
+  swift_checkout_sdk: 'https://js.sumup.com/swift-checkout/v1/sdk.js',
   payment_widget_sdk: 'https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js',
 };
 
