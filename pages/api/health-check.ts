@@ -163,7 +163,10 @@ const handler: NextApiHandler = (req, res) => {
     });
     // Be sure to end the span!
     span.end();
-    res.status(200).json({ status: 'ok' });
+    res.status(200).json({
+      status: 'ok',
+      message: `ok ${process.env.OTEL_API_URL}`.substring(0, 10),
+    });
   });
 };
 
