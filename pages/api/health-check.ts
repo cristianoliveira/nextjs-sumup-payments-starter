@@ -160,9 +160,13 @@ const handler: NextApiHandler = (req, res) => {
       'http.scheme': url.protocol,
       'http.target': url.pathname,
       'net.host.name': url.host,
+      'app.version': '1',
     });
     // Be sure to end the span!
     span.end();
+  });
+
+  provider.forceFlush().finally(() => {
     res.status(200).json({
       status: 'ok',
       message: `ok ${process.env.OTEL_API_URL}`.substring(0, 10),
