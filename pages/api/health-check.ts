@@ -90,17 +90,12 @@ export const withOpenTelemetry: WithOpenTelemetry =
             }
 
             const sendData = {
-              send: (data: any) => {
+              send: (data: string | number | symbol) =>
                 provider.forceFlush().finally(() => {
-                  target.send(data);
-                  resolve();
-                });
-              },
+                  resolve(target.send(data));
+                }),
               json: (data: Record<string | number | symbol, unknown>) => {
-                provider.forceFlush().finally(() => {
-                  target.json(data);
-                  resolve();
-                });
+                provider.forceFlush().finally(() => resolve(target.json(data)));
               },
             };
 
@@ -135,7 +130,6 @@ export const withOpenTelemetry: WithOpenTelemetry =
           const status = (error as AxiosError).status || 500;
 
           resProxy.status(status).send({ message: errorMessage });
-          resolve();
         }
       });
     });
