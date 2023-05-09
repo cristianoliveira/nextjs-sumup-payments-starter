@@ -52,94 +52,94 @@ type WithOpenTelemetry = {
   (callback: NextApiHandler): NextApiHandler;
 };
 
-// export const withOpenTelemetry: WithOpenTelemetry =
-//   (callback) => (req, res) => {
-//     const rootCtx = propagation.extract(ROOT_CONTEXT, req.headers);
+export const withOpenTelemetry: WithOpenTelemetry =
+  (callback) => (req, res) => {
+    const rootCtx = propagation.extract(ROOT_CONTEXT, req.headers);
 
-//     const url = new URL(req.url!, `https://${req.headers.host!}`);
+    const url = new URL(req.url!, `https://${req.headers.host!}`);
+    const span = tracer.startSpan(
+      `HTTP ${req.method!} ${req.url!}`,
+      {
+        kind: SpanKind.SERVER,
+        attributes: {
+          'http.url': url.href,
+          'http.method': req.method,
+          'http.host': url.host,
+          'http.client_ip': req.headers['x-forwarded-for'],
+          'http.user_agent': req.headers['user-agent'],
+          'http.referer': req.headers.referer,
+          'http.scheme': url.protocol,
+          'http.target': url.pathname,
+          'net.host.name': url.host,
+        },
+      },
+      rootCtx,
+    );
 
-//     const span = tracer.startSpan(
-//       `HTTP ${req.method!} ${req.url!}`,
-//       { kind: SpanKind.SERVER },
-//       rootCtx,
-//     );
+    const requestCtx = trace.setSpan(rootCtx, span);
 
-//     const requestCtx = trace.setSpan(rootCtx, span);
-//     tracer.startActiveSpan('main', (span) => {
-//       span.end();
-//     });
+    return new Promise<void>((resolve) => {
+      context.with(requestCtx, async () => {
+        const resProxy = new Proxy<NextApiResponse>(res, {
+          get(target: NextApiResponse, prop: keyof NextApiResponse) {
+            if (prop === 'status') {
+              return (statusCode: number) => {
+                target.status(statusCode);
+                return resProxy;
+              };
+            }
 
-//     context.with(requestCtx, () => {
-//       span.setAttributes({
-//         'http.url': url.href,
-//         'http.method': req.method,
-//         'http.host': url.host,
-//         'http.client_ip': req.headers['x-forwarded-for'],
-//         'http.user_agent': req.headers['user-agent'],
-//         'http.referer': req.headers.referer,
-//         'http.scheme': url.protocol,
-//         'http.target': url.pathname,
-//         'net.host.name': url.host,
-//       });
+            const sendData = {
+              send: (data: any) => {
+                provider.forceFlush().finally(() => {
+                  target.send(data);
+                  resolve();
+                });
+              },
+              json: (data: Record<string | number | symbol, unknown>) => {
+                provider.forceFlush().finally(() => {
+                  target.json(data);
+                  resolve();
+                });
+              },
+            };
 
-//       const resProxy: NextApiResponse = new Proxy<NextApiResponse>(res, {
-//         get(target, prop) {
-//           if (prop === 'status') {
-//             return (statusCode: number) => {
-//               target.status(statusCode);
-//               return resProxy;
-//             };
-//           }
+            const sendDataFunc = sendData[prop];
+            if (sendDataFunc) {
+              span.setAttribute('http.status_code', target.statusCode);
+              span.end();
 
-//           if (prop === 'json') {
-//             return (data: Record<string | number | symbol, unknown>) => {
-//               span.setAttribute('http.status_code', target.statusCode);
-//               span.end();
+              return sendDataFunc;
+            }
 
-//               provider.forceFlush().finally(() => {
-//                 target.json(data);
-//               });
-//             };
-//           }
+            return target[prop];
+          },
+        });
 
-//           if (prop === 'send') {
-//             return (data: string | number | symbol) => {
-//               span.setAttribute('http.status_code', target.statusCode);
-//               span.end();
+        try {
+          await callback(req, resProxy);
+        } catch (error) {
+          const errorMessage =
+            (error as AxiosError).message || 'Internal unknown error';
 
-//               provider.forceFlush().finally(() => {
-//                 target.send(data);
-//               });
-//             };
-//           }
+          span.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: errorMessage,
+          });
 
-//           return target[prop as keyof NextApiResponse];
-//         },
-//       });
+          span.recordException(
+            (error as Error) || `Error executing ${SERVICE_NAME} handler!`,
+            Date.now(),
+          );
 
-//       try {
-//         callback(req, resProxy);
-//       } catch (error) {
-//         const errorMessage =
-//           (error as AxiosError).message || 'Internal unknown error';
+          const status = (error as AxiosError).status || 500;
 
-//         span.setStatus({
-//           code: SpanStatusCode.ERROR,
-//           message: errorMessage,
-//         });
-
-//         span.recordException(
-//           (error as Error) || `Error executing ${SERVICE_NAME} handler!`,
-//           Date.now(),
-//         );
-
-//         const status = (error as AxiosError).status || 500;
-
-//         resProxy.status(status).send({ message: errorMessage });
-//       }
-//     });
-//   };
-//
+          resProxy.status(status).send({ message: errorMessage });
+          resolve();
+        }
+      });
+    });
+  };
 
 // const exporter = new ConsoleSpanExporter();
 const processor = new BatchSpanProcessor(exporter);
@@ -148,30 +148,10 @@ provider.addSpanProcessor(processor);
 provider.register();
 
 const handler: NextApiHandler = (req, res) => {
-  tracer.startActiveSpan('main', (span) => {
-    const url = new URL(req.url!, `https://${req.headers.host!}`);
-    span.setAttributes({
-      'http.url': url.href,
-      'http.method': req.method,
-      'http.host': url.host,
-      'http.client_ip': req.headers['x-forwarded-for'],
-      'http.user_agent': req.headers['user-agent'],
-      'http.referer': req.headers.referer,
-      'http.scheme': url.protocol,
-      'http.target': url.pathname,
-      'net.host.name': url.host,
-      'app.version': '1',
-    });
-    // Be sure to end the span!
-    span.end();
-  });
-
-  provider.forceFlush().finally(() => {
-    res.status(200).json({
-      status: 'ok',
-      message: `ok ${process.env.OTEL_API_URL}`.substring(0, 10),
-    });
+  res.status(200).json({
+    status: 'ok',
+    message: `ok ${process.env.OTEL_API_URL}`.substring(0, 10),
   });
 };
 
-export default handler;
+export default withOpenTelemetry(handler);
