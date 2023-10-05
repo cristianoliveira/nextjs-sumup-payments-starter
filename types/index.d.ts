@@ -1,4 +1,4 @@
 type DonationDetails = {
-  merchantPublicKey: string;
+  merchantPublicKey?: string;
   donationAmount: string;
 };

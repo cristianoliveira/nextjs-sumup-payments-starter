@@ -13,4 +13,17 @@ export default {
         },
       )
       .then(({ data }) => data),
+
+  createSubscription: () =>
+    axios
+      .post<CheckoutCreated>(
+        '/api/create-subscription',
+        { },
+        {
+          headers: {
+            'content-type': 'application/json',
+          },
+        },
+      )
+      .then(({ data }) => data),
 };
