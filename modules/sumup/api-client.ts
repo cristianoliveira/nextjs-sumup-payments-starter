@@ -33,12 +33,44 @@ const apiInit = function ({ apiUrl }) {
             },
             {
               headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
               },
             },
           )
           .then(({ data }) => data);
       },
+    },
+
+    customers: {
+      createCustomer: async ({ access_token, customer_ref }: { access_token: string, customer_ref: string }) => {
+        console.log('@@@@@@ access_token: ', access_token);
+        const response = await axios.post(`${apiUrl}/v0.1/customers`, {
+          customer_id: customer_ref,
+          personal_details: {
+            address: {
+              city: "Berlin",
+              country: "DE",
+              line1: "Sample street",
+              line2: "ap. 5",
+              postal_code: "10115",
+              state: "Berlin"
+            },
+            birthdate: "1993-12-31",
+            email: "test.customer@cristianoliveira.dev",
+            first_name: "Cris",
+            last_name: "Doe",
+            phone: "+491635559723"
+          }
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${access_token}`
+          }
+        }).then(({ data }) => data);
+
+        return response.id;
+      }
     },
 
     checkouts: {
