@@ -27,8 +27,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  console.log('@@@@@@ token: ', token);
-
   const customerId = await api.customers.createCustomer({
     access_token: token.access_token,
     customer_ref: customerRef
@@ -37,12 +35,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return customerRef;
     }
 
-    console.log('@@@@@@ err: ', err.response);
-
     return null;
   });
-
-  console.log('@@@@@@ customerId: ', customerId);
 
   if (!customerId) {
     const response = { status: 500, message: "error while creating customer" };
