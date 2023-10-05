@@ -26,4 +26,14 @@ export default {
         },
       )
       .then(({ data }) => data),
+
+  listPaymentInstruments: ({ onlyActive = false }: { onlyActive: boolean }) =>
+    axios
+      .get<PaymentInstrument>(
+        '/api/payment-instruments',
+        { 
+          params: { filterActive: onlyActive ? 1 : undefined },
+        },
+      )
+      .then(({ data }) => data),
 };

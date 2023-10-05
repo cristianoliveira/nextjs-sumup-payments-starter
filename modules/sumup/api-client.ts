@@ -13,7 +13,7 @@ type MerchantPublicId = {
   public_api_key: string;
 };
 
-const apiInit = function ({ apiUrl }) {
+const apiInit = function({ apiUrl }) {
   return {
     auth: {
       fetchAccessToken: async ({
@@ -39,6 +39,20 @@ const apiInit = function ({ apiUrl }) {
           )
           .then(({ data }) => data);
       },
+    },
+
+    paymentInstruments: {
+      listPaymentInstruments: async ({
+        access_token,
+        customer_id
+      }: { access_token: string, customer_id: string }) => {
+        return await axios.get(`${apiUrl}/v0.1/customers/${customer_id}/payment-instruments`, {
+          headers: {
+            'Authorization': `Bearer ${access_token}`,
+            'Content-Type': 'application/json;charset=UTF-8'
+          }
+        }).then(({ data }) => data);
+      }
     },
 
     customers: {
