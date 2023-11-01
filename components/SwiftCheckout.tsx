@@ -63,9 +63,11 @@ function SwiftCheckout({
 
     paymentRequest.canMakePayment().then((isAvailable: boolean) => {
       if (isAvailable) {
-        paymentElement.mount({
-          paymentMethods: ['apple_pay'],
-          container: paymentContainerRef.current,
+        paymentRequest.availablePaymentMethods().then((paymentMethods: unknown) => {
+          paymentElement.mount({
+            paymentMethods,
+            container: paymentContainerRef.current,
+          });
         });
       } else {
         setIssuePaymentRequest(
