@@ -25,12 +25,48 @@ function SwiftCheckout({
       return;
     }
 
+    const googlePayMerchantInfo = {
+      merchantName: process.env.NEXT_PUBLIC_GOOGLE_PAY_MERCHANT_NAME,
+      merchantId: process.env.NEXT_PUBLIC_GOOGLE_PAY_MERCHANT_ID,
+    }
+
     const paymentRequest = sumUpClient.paymentRequest({
       countryCode: 'DE',
       total: {
         label: 'A small contribution',
         amount: { currency: 'EUR', value: donationAmount },
       },
+
+      methodData: [
+        {
+          supportedMethods: 'google_pay',
+
+          data: {
+            merchantInfo: googlePayMerchantInfo,
+          }
+        }
+      ],
+
+      shippingOptions: [
+        {
+          id: 'free',
+          label: 'Free shipping',
+          amount: { currency: 'EUR', value: '0.00' },
+          description: 'Delivered within 5 days.',
+        },
+        {
+          id: 'express',
+          label: 'Express shipping',
+          amount: { currency: 'EUR', value: '1.00' },
+          description: 'Delivered within 2 days.',
+        },
+        {
+          id: 'express pluss',
+          label: 'Express pluss shipping',
+          amount: { currency: 'EUR', value: '2.00' },
+          description: 'Delivered same day.',
+        },
+      ]
     });
 
     const paymentElement = sumUpClient
@@ -60,6 +96,19 @@ function SwiftCheckout({
           onError(e);
         }
       });
+
+    paymentRequest.onShippingOptionsChange((shippingOption: any) => {
+        const value = parseFloat(shippingOption.amount.value) + parseFloat(donationAmount);
+        return {
+          total: {
+            label: 'A small contribution + shipping',
+            amount: {
+              currency: shippingOption.amount.currency,
+              value: value.toFixed(2),
+            }
+          }
+        };
+    });
 
     paymentRequest.canMakePayment().then((isAvailable: boolean) => {
       if (isAvailable) {
