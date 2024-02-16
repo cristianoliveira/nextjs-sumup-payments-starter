@@ -15,4 +15,7 @@ module.exports = {
   rules: {
     'no-console': 'warn',
   },
+  globals: {
+    "ApplePaySession": true
+  }
 };
